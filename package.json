@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/bespinoza90/constructer_word_guess#readme",
   "dependencies": {
+    "chalk": "^4.0.0",
     "inquirer": "^7.1.0"
   },
   "devDependencies": {}

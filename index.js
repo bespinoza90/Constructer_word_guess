@@ -1,9 +1,9 @@
 let word = require("./word.js");
 let inquirer = require("inquirer");
 let chalk = require("chalk");
-let wordArray = ["jerry paper", "stimulator jones", "mayer hawthorne"];
+let wordArray = ["jerry", "stimulator", "mayer"];
 let randomWord = Math.floor(Math.random() * wordArray.length);
-let guessWord = "jerry paper";
+let guessWord = "jerry";
 let gameWord = new word(guessWord);
 
 let counter = 10;
