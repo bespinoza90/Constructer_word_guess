@@ -1,48 +1,108 @@
-let word = require("./word.js");
-let inquirer = require("inquirer");
-let chalk = require("chalk");
-let wordArray = ["jerry", "stimulator", "mayer"];
-let randomWord = Math.floor(Math.random() * wordArray.length);
-let guessWord = "jerry";
-let gameWord = new word(guessWord);
+var Word = require("./Word");
+var inquirer = require("inquirer");
 
-let counter = 10;
-gameWord.createObject();
+var musicWords = ["treble", "bass", "alto", "staff", "chord", "note", "pitch", "accent", "measure"];
+
+var wordPicked;
+var currentWord;
+var remainingGuess;
 
 
-var guessLetter = () => {
+function initGame() {
+    
+    wordPicked = musicWords[Math.floor(Math.random() * musicWords.length)];
 
+   
+    currentWord = new Word(wordPicked);
+    currentWord.renderWord();
 
-    console.log(gameWord.createString());
-
-    inquirer.
-        prompt([
-            {
-                type: "input",
-                message: "Guess a letter",
-                name: "letter"
-            }
-        ]).then((response) => {
-            console.log("Letter Guessed was " + response.letter)
-            let userGuess = response.letter;
-
-            console.log(gameWord.objectArr[0].isGuessed(userGuess))
-            console.log(gameWord.createString());
-
-
-            counter--;
-
-            if (counter >= 0) {
-                console.log(chalk.inverse("You have " + counter + " guesses left"));
-                guessLetter();
-            } else {
-                console.log("Game Over")
-            }
-        })
-
-
+    remainingGuess = 12;
 
 }
 
 
-guessLetter();
+console.log("\nWord Guess! What's the musical term? You will have 12 guesses starting.");
+
+initGame();
+
+
+function playGame() {
+
+    if (remainingGuess > 0) { 
+
+        inquirer.prompt([
+            {
+                type: "input",
+                message: "Guess a letter!",
+                name: "letter"
+            }
+        ]).then(function (answer) {
+
+            
+            currentWord.checkWord(answer.letter);
+            
+            currentWord.renderWord();
+
+            remainingGuess--;
+
+            
+            if (wordPicked.includes(answer.letter)) {
+                console.log("\nCORRECT!!!\n")
+            } else {
+                console.log("\nINCORRECT!!!\n");
+                console.log(remainingGuess + " guess(es) remaining!!!\n");
+            }
+
+            
+            if (currentWord.word.every(item => item.guessed === true)) {
+
+                console.log("\nYou got it right!\n");
+                
+                
+                inquirer.prompt([
+                    {
+                        type: "confirm",
+                        message: "Do you want to guess next word?",
+                        name: "continue"
+                    }
+                ]).then(function (response) {
+
+                    if (response.continue) { 
+                        initGame();
+                        playGame();
+                    } else { 
+                        console.log("\nThank you for playing!\n");
+                        return false;
+                    }
+                });
+
+            } else {  
+                playGame();
+            }
+        });
+    } else { 
+
+        console.log("\nGame over, no more guesses!\n");
+
+        
+        inquirer.prompt([
+            {
+                type: "confirm",
+                message: "Do you want to guess next word?",
+                name: "continue"
+            }
+        ]).then(function (response) {
+            if (response.continue) { 
+                initGame();
+                playGame();
+            }
+            else { 
+                console.log("\nThank you for playing!\n");
+                return false;
+            }
+        });
+    }
+
+}
+
+playGame();

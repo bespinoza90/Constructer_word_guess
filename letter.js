@@ -1,23 +1,20 @@
-function Letter(letter) {
+var Letter = function (letter) {
+
     this.letter = letter;
+
     this.guessed = false;
 
-    this.displayLetter = () => {
-        if (this.guessed === true) {
-            return this.letter + " ";
-        } else {
-            return "_ ";
+    this.renderLetter = function () {
+        if (this.guessed) { return this.letter; } 
+        else { return "_"; }
+    };
+
+    this.checkLetter = function (userLetter) {
+        if (userLetter === this.letter) {
+            this.guessed = true;
         }
-    }
-    this.isGuessed = (guess) => {
-        if (guess === this.letter) {
-            this.guessed = true
-            return this.guessed
-        } else {
-            return false
-        }
-    }
+    };
+
 }
 
-module.exports = Letter
-
+module.exports = Letter;
